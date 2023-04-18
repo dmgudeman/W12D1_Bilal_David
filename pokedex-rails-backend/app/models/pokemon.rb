@@ -14,12 +14,18 @@
 #  updated_at :datetime         not null
 #
 class Pokemon < ApplicationRecord
-    validates :number, presence: true, numericality: { greater_than: 0 }, uniqueness: { message: "'%{value}' must be greater than 0" }
-    validates :name, length: { in: 3..255 }, uniqueness: { message: "'%{value}' is already in use" }, presence: true 
-    validates :attack, presence: true, numericality: { greater_than: 0, less_than: 100, only_integer: true }
-    validates :defense, presence: true, numericality: { greater_than: 0, less_than: 100, only_integer: true }
+    validates :number, presence: true, numericality: { greater_than: 0 }, uniqueness: { message: "must be greater than 0" }
+    validates :name, length: { in: 3..255 }, uniqueness: { message: " is already in use" }, presence: true 
+    validates :attack, presence: true, numericality: { greater_than: 0, less_than_or_equal_to: 100, message: "must be between 0 and 100" }
+    validates :defense, presence: true, numericality: { greater_than: 0, less_than_or_equal_to: 100, message: "must be between 0 and 100" }
     validates :image_url, presence: true
     validates :captured, inclusion: [true, false]
+
+    has_many :items, dependent: :destroy
+    has_many :poke_moves, inverse_of: :pokemons
+    has_many :moves, through: :poke_moves
+
+
    
     TYPES = [
     'fire',
